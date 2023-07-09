@@ -1,0 +1,22 @@
+{
+  "name": "jest-unit-testing",
+  "version": "1.0.0",
+  "description": "Simple testing project to use JEST",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Davidrami12/JEST-unit-testing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Davidrami12/JEST-unit-testing/issues"
+  },
+  "homepage": "https://github.com/Davidrami12/JEST-unit-testing#readme",
+  "devDependencies": {
+    "jest": "^29.6.1"
+  }
+}
