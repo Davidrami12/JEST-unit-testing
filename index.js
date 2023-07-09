@@ -88,8 +88,11 @@ class Booking{
 
     getFee(){
         // returns the fee, including discounts on room and booking
-        const total = ((this.discount + this.room.discount) >= 90) ? 90 : this.discount + this.room.discount
-        return Math.floor(this.room.rate * (total / 100));
+        let totalDiscount = this.discount + this.room.discount;
+        const discountedRate = this.room.rate * ((100 - totalDiscount) / 100);
+
+        return Math.floor(discountedRate);
+
     }
 }
 

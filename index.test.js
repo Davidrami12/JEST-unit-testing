@@ -138,19 +138,19 @@ describe('ROOMS - Array with rooms not occupied', () => {
 
 // Tests for Bookings (getFee)
 describe('BOOKINGS - Total price', () => {
-    test('Booking price: 240', () => {
+    test('Booking price: 560', () => {
         const room1 = new Room("Room1", [], 800, 10);
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 20, room1);
         room1.bookings.push(booking1)
 
-        expect(booking1.getFee()).toBe(240);
+        expect(booking1.getFee()).toBe(560);
     })
 
-    test('Booking price: 840', () => {
-        const room1 = new Room("Room1", [], 1200, 30);
+    test('Booking price: 240', () => {
+        const room1 = new Room("Room1", [], 1200, 40);
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 40, room1);
         room1.bookings.push(booking1)
 
-        expect(booking1.getFee()).toBe(840);
+        expect(booking1.getFee()).toBe(240);
     })
 })
