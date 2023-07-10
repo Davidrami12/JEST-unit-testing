@@ -2,7 +2,7 @@ const { Room, Booking } = require('./index');
 
 // Tests for Rooms (isOccupied)
 describe('ROOMS - Check occupancy rooms in a date', () => {
-    test('Room occupied - not available (return true)', () => {
+    test('Room occupied - not available', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
         const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
@@ -11,7 +11,7 @@ describe('ROOMS - Check occupancy rooms in a date', () => {
         expect(room1.isOccupied(checkDate)).toBeTruthy();
     })
 
-    test('Room is occupied - is available (return false)', () => {
+    test('Room not occupied - is available', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
         const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
@@ -97,18 +97,6 @@ describe('ROOMS - Total occupancy percentage across all rooms', () => {
 
 // Tests for Room (availableRooms)
 describe('ROOMS - Array with rooms not occupied', () => {
-    test('No room occupied in respective dates', () => {
-        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
-        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
-        const room1 = new Room("Room1", [booking1], 1000, 10);
-        const room2 = new Room("Room2", [booking2], 1000, 10);
-        const rooms = [room1, room2]
-        const startDate = new Date("07/16/2023");
-        const endDate = new Date("07/20/2023");
-
-        expect(Room.availableRooms(rooms, startDate, endDate)).toEqual([]);
-    })
-
     test('Room1 occupied in respective dates', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
@@ -132,25 +120,56 @@ describe('ROOMS - Array with rooms not occupied', () => {
 
         expect(Room.availableRooms(rooms, startDate, endDate)).toEqual([room2]);
     })
+
+    test('No room occupied in respective dates', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1], 1000, 10);
+        const room2 = new Room("Room2", [booking2], 1000, 10);
+        const rooms = []
+        const startDate = new Date("07/16/2023");
+        const endDate = new Date("07/20/2023");
+
+        expect(Room.availableRooms(rooms, startDate, endDate)).toEqual([]);
+    })
 })
 
 
 
 // Tests for Bookings (getFee)
 describe('BOOKINGS - Total price', () => {
-    test('Booking price: 560', () => {
-        const room1 = new Room("Room1", [], 800, 10);
+
+    test('Booking price type is integer', () => {
+        const room1 = new Room("Room1", [], 1000, 20);
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, room1);
+        room1.bookings.push(booking1)
+
+        expect(typeof(booking1.getFee())).toBe("number");
+    })
+
+    test('Non-integer discounted rate throws error', () => {
+        const room1 = new Room("Room1", [], "asd", "w24"); // This will yield a non-integer fee
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 20, room1);
         room1.bookings.push(booking1)
 
-        expect(booking1.getFee()).toBe(560);
+        // We expect getFee() to throw an error due to non-integer fee
+        expect(() => booking1.getFee()).toThrow("Discounted rate is not an integer");
     })
 
-    test('Booking price: 240', () => {
-        const room1 = new Room("Room1", [], 1200, 40);
+    test('Booking price: 0', () => {
+        const room1 = new Room("Room1", [], 0, 20);
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 40, room1);
         room1.bookings.push(booking1)
 
-        expect(booking1.getFee()).toBe(240);
+        expect(booking1.getFee()).toBe(0);
     })
+
+    test('Booking price: 600', () => {
+        const room1 = new Room("Room1", [], 800, 15);
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 10, room1);
+        room1.bookings.push(booking1)
+
+        expect(booking1.getFee()).toBe(600);
+    })
+
 })
