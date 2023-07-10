@@ -47,11 +47,12 @@ class Room {
     static totalOccupancyPercentage(rooms, startDate, endDate){
         // returns the total occupancy percentage across all rooms in the array
 
-        if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
-            throw new Error('Invalid parameter: startDate and endDate expected to be dates');
-        }
         if (!Array.isArray(rooms)) {
             throw new Error('Invalid parameter: rooms expected to be an array');
+        }
+
+        if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
+            throw new Error('Invalid parameter: startDate and endDate expected to be dates');
         }
         
         let occupancy = 0;
@@ -68,6 +69,15 @@ class Room {
 
     static availableRooms(rooms, startDate, endDate){
         // returns an array of all rooms in the array that are not occupied for the entire duration
+
+        if (!Array.isArray(rooms)) {
+            throw new Error('Invalid parameter: rooms expected to be an array');
+        }
+
+        if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
+            throw new Error('Invalid parameter: startDate and endDate expected to be dates');
+        }
+        
         const roomsAvailable = [];
 
         rooms.forEach(room => {
@@ -95,6 +105,7 @@ class Booking{
 
     getFee(){
         // returns the fee, including discounts on room and booking
+
         let totalDiscount = this.discount + this.room.discount;
         const discountedRate = this.room.rate * ((100 - totalDiscount) / 100);
 

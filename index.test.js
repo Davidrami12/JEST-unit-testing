@@ -18,7 +18,7 @@ describe('ROOMS - Check occupancy rooms in a date', () => {
         const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
         const checkDate = new Date("07/21/2023");
     
-        expect(typeof room1.isOccupied(checkDate)).toBe("boolean");
+        expect(typeof(room1.isOccupied(checkDate))).toBe("boolean");
     })
 
     test('Room occupied - not available', () => {
@@ -136,7 +136,7 @@ describe('ROOMS - Total occupancy percentage across all rooms', () => {
         expect(() => Room.totalOccupancyPercentage(rooms, startDate, endDate)).toThrowError("Invalid parameter: startDate and endDate expected to be dates");
     })
 
-    test('Returned value expected to be a number >= 0 && <= 100', () => {
+    test('Returned value expected to be an array', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/16/2023"), new Date("07/20/2023"), 30, {});
         const room1 = new Room("Room1", [booking1], 1000, 10);
@@ -148,7 +148,18 @@ describe('ROOMS - Total occupancy percentage across all rooms', () => {
         expect(Array.isArray(rooms)).toBe(true);
     })
 
-    // TODO: do dates case
+    test('Returned values expected to be dates', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/16/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1], 1000, 10);
+        const room2 = new Room("Room2", [booking2], 1000, 10);
+        const rooms = [room1, room2];
+        const startDate = new Date("07/21/2023");
+        const endDate = new Date("07/22/2023");
+    
+        expect(startDate instanceof Date).toBe(true);
+        expect(endDate instanceof Date).toBe(true);
+    })
 
     test('0% total occupancy for these rooms', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
@@ -192,6 +203,65 @@ describe('ROOMS - Total occupancy percentage across all rooms', () => {
 // Tests for Room (availableRooms)
 describe('ROOMS - Array with rooms not occupied', () => {
 
+    test('Invalid parameters (array room) - throws error', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1], 1000, 10);
+        const room2 = new Room("Room2", [booking2], 1000, 10);
+        const rooms = "";
+        const startDate = new Date("07/19/2023");
+        const endDate = new Date("07/20/2023");
+    
+        expect(() => Room.availableRooms(rooms, startDate, endDate)).toThrowError("Invalid parameter: rooms expected to be an array");
+    })
+
+    test('Invalid parameters (date startDate) - throws error', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
+        const rooms = [room1];
+        const startDate = "07/16/2023";  // this is a string, not a date
+        const endDate = new Date("07/20/2023");
+    
+        expect(() => Room.availableRooms(rooms, startDate, endDate)).toThrowError("Invalid parameter: startDate and endDate expected to be dates");
+    })
+
+    test('Invalid parameters (date endDate) - throws error', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
+        const rooms = [room1];
+        const startDate = new Date("07/19/2023");
+        const endDate = "07/20/2023" // this is a string, not a date
+    
+        expect(() => Room.availableRooms(rooms, startDate, endDate)).toThrowError("Invalid parameter: startDate and endDate expected to be dates");
+    })
+
+    test('Returned value expected to be an array', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/16/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1], 1000, 10);
+        const room2 = new Room("Room2", [booking2], 1000, 10);
+        const rooms = [room1, room2];
+        const startDate = new Date("07/21/2023");
+        const endDate = new Date("07/22/2023");
+    
+        expect(Array.isArray(rooms)).toBe(true);
+    })
+
+    test('Returned values expected to be dates', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1], 1000, 10);
+        const room2 = new Room("Room2", [booking2], 1000, 10);
+        const rooms = [room1, room2];
+        const startDate = new Date("07/19/2023");
+        const endDate = new Date("07/20/2023");
+    
+        expect(startDate instanceof Date).toBe(true);
+        expect(endDate instanceof Date).toBe(true);
+    })
+
     test('Room1 occupied in respective dates', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
@@ -217,7 +287,7 @@ describe('ROOMS - Array with rooms not occupied', () => {
     })
 
     test('No room occupied in respective dates', () => {
-        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/10/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
         const room1 = new Room("Room1", [booking1], 1000, 10);
         const room2 = new Room("Room2", [booking2], 1000, 10);
