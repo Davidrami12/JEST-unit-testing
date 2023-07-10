@@ -31,8 +31,34 @@ describe('ROOMS - Check occupancy rooms in a date', () => {
     })
 })
 
+
 // Tests for Rooms (occupancyPercentage)
 describe('ROOMS - Percentage of days with occupancy', () => {
+    test('Invalid parameters - throws error', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
+        const startDate = "07/16/2023";  // this is a string, not a date
+        const endDate = new Date("07/20/2023");
+    
+        expect(() => room1.occupancyPercentage(startDate, endDate)).toThrowError("Invalid parameter: startDate and endDate expected to be dates");
+    })
+
+    test('Returns a percentage', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/20/2023"), new Date("07/22/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
+        const startDate = new Date("07/15/2023");
+        const endDate = new Date("07/23/2023");
+    
+        // Check if the result is a number (percentage)
+        expect(typeof(room1.occupancyPercentage(startDate, endDate))).toBe('number');
+    
+        // Check if the result is within the valid range for percentages
+        expect(room1.occupancyPercentage(startDate, endDate)).toBeGreaterThanOrEqual(0);
+        expect(room1.occupancyPercentage(startDate, endDate)).toBeLessThanOrEqual(100);
+    })
+
     test('0% occupancy for this room', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
@@ -64,6 +90,7 @@ describe('ROOMS - Percentage of days with occupancy', () => {
     })
     
 })
+
 
 // Tests for Rooms (totalOccupancyPercentage)
 describe('ROOMS - Total occupancy percentage across all rooms', () => {
@@ -105,6 +132,7 @@ describe('ROOMS - Total occupancy percentage across all rooms', () => {
     
 })
 
+
 // Tests for Room (availableRooms)
 describe('ROOMS - Array with rooms not occupied', () => {
     test('Room1 occupied in respective dates', () => {
@@ -143,6 +171,8 @@ describe('ROOMS - Array with rooms not occupied', () => {
         expect(Room.availableRooms(rooms, startDate, endDate)).toEqual([]);
     })
 })
+
+
 
 
 

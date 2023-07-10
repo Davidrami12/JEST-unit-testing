@@ -11,7 +11,7 @@ class Room {
         if (!(date instanceof Date)) {
             throw new Error('Invalid parameter: date expected');
         }
-        
+
         let occupied = false;
         
         this.bookings.forEach(booking => {
@@ -25,6 +25,10 @@ class Room {
 
     occupancyPercentage(startDate, endDate) {
         // returns the percentage of days with occupancy within the range of dates provided
+        if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
+            throw new Error('Invalid parameter: startDate and endDate expected to be dates');
+        }
+        
         let day = (1000*3600*24);
         let daysDifference = Math.ceil((endDate.getTime() - startDate.getTime()) / day) + 1;
         let occupied = [];
