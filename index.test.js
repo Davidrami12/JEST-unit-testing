@@ -2,11 +2,21 @@ const { Room, Booking } = require('./index');
 
 // Tests for Rooms (isOccupied)
 describe('ROOMS - Check occupancy rooms in a date', () => {
-    test('Room occupied - not available', () => {
+
+    test('Room date invalid parameter throws error', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
         const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
-        const checkDate = new Date("07/17/2023");
+        const checkDate = "07/23/2023";  // this is a string, not a date
+
+        expect(() => room1.isOccupied(checkDate)).toThrowError("Invalid parameter: date expected");
+    })
+
+    test('Room occupied - not available', () => {
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/20/2023"), new Date("07/22/2023"), 30, {});
+        const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/22/2023"), new Date("07/24/2023"), 30, {});
+        const room1 = new Room("Room1", [booking1, booking2], 1000, 10);
+        const checkDate = new Date("07/21/2023");
 
         expect(room1.isOccupied(checkDate)).toBeTruthy();
     })
@@ -140,8 +150,8 @@ describe('ROOMS - Array with rooms not occupied', () => {
 describe('BOOKINGS - Total price', () => {
 
     test('Booking price type is integer', () => {
-        const room1 = new Room("Room1", [], 1000, 20);
-        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 30, room1);
+        const room1 = new Room("Room1", [], 1000, 40);
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 0, room1);
         room1.bookings.push(booking1)
 
         expect(typeof(booking1.getFee())).toBe("number");
@@ -149,7 +159,7 @@ describe('BOOKINGS - Total price', () => {
 
     test('Non-integer discounted rate throws error', () => {
         const room1 = new Room("Room1", [], "asd", "w24"); // This will yield a non-integer fee
-        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 20, room1);
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 0, room1);
         room1.bookings.push(booking1)
 
         // We expect getFee() to throw an error due to non-integer fee
@@ -158,15 +168,15 @@ describe('BOOKINGS - Total price', () => {
 
     test('Booking price: 0', () => {
         const room1 = new Room("Room1", [], 0, 20);
-        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 40, room1);
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 0, room1);
         room1.bookings.push(booking1)
 
         expect(booking1.getFee()).toBe(0);
     })
 
     test('Booking price: 600', () => {
-        const room1 = new Room("Room1", [], 800, 15);
-        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 10, room1);
+        const room1 = new Room("Room1", [], 800, 25);
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 0, room1);
         room1.bookings.push(booking1)
 
         expect(booking1.getFee()).toBe(600);

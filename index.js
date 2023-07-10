@@ -8,6 +8,10 @@ class Room {
 
     isOccupied(date){
         // returns false if not occupied, returns true if occupied
+        if (!(date instanceof Date)) {
+            throw new Error('Invalid parameter: date expected');
+        }
+        
         let occupied = false;
         
         this.bookings.forEach(booking => {
