@@ -348,4 +348,12 @@ describe('BOOKINGS - Total price', () => {
         expect(booking1.getFee()).toBe(600);
     })
 
+    test('Booking price: 1000 (no discount applied)', () => {
+        const room1 = new Room("Room1", [], 1000, 0);
+        const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/16/2023"), new Date("07/18/2023"), 0, room1);
+        room1.bookings.push(booking1)
+
+        expect(booking1.getFee()).toBe(1000);
+    })
+
 })
