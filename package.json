@@ -2,7 +2,7 @@
   "name": "jest-unit-testing",
   "version": "1.0.0",
   "description": "Simple testing project to use JEST",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "jest"
   },
@@ -17,6 +17,11 @@
   },
   "homepage": "https://github.com/Davidrami12/JEST-unit-testing#readme",
   "devDependencies": {
-    "jest": "^29.6.1"
+    "@types/jest": "^29.5.3",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.4.2",
+    "jest": "^29.6.1",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.1.6"
   }
 }

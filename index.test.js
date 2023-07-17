@@ -110,6 +110,8 @@ describe('ROOMS - Percentage of days with occupancy', () => {
 })
 
 
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
 // Tests for Rooms (totalOccupancyPercentage)
 describe('ROOMS - Total occupancy percentage across all rooms', () => {
 

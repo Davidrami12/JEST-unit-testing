@@ -1,12 +1,25 @@
+interface RoomInterface {
+    name: string;
+    bookings: Array<Booking>;
+    rate: number;
+    discount: number;
+}
+
 class Room {
-    constructor(name, bookings, rate, discount){
-        this.name = name; // string
-        this.bookings = bookings; // array bookings objs
-        this.rate = rate; // in cents
-        this.discount = discount; // as percentage
+
+    name: string;
+    bookings: Array<Booking>;
+    rate: number;
+    discount: number;
+
+    constructor(room: RoomInterface){
+        this.name = room.name; // string
+        this.bookings = room.bookings; // array bookings objs
+        this.rate = room.rate; // in cents
+        this.discount = room.discount; // as percentage
     }
 
-    isOccupied(date){
+    isOccupied(date: Date): boolean{
         // returns false if not occupied, returns true if occupied
 
         if (!(date instanceof Date)) {
@@ -24,7 +37,7 @@ class Room {
         return occupied;
     }
 
-    occupancyPercentage(startDate, endDate) {
+    occupancyPercentage(startDate: Date, endDate: Date): number {
         // returns the percentage of days with occupancy within the range of dates provided
 
         if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
@@ -44,7 +57,7 @@ class Room {
         return Math.floor((totalOccupied / daysDifference) * 100);
     } 
 
-    static totalOccupancyPercentage(rooms, startDate, endDate){
+    static totalOccupancyPercentage(rooms: Array<Room>, startDate: Date, endDate: Date): number {
         // returns the total occupancy percentage across all rooms in the array
 
         if (!Array.isArray(rooms)) {
@@ -67,7 +80,7 @@ class Room {
     }
 
 
-    static availableRooms(rooms, startDate, endDate){
+    static availableRooms(rooms: Array<Room>, startDate: Date, endDate: Date): Array<Room> | string{
         // returns an array of all rooms in the array that are not occupied for the entire duration
 
         if (!Array.isArray(rooms)) {
@@ -78,7 +91,7 @@ class Room {
             throw new Error('Invalid parameter: startDate and endDate expected to be dates');
         }
         
-        const roomsAvailable = [];
+        const roomsAvailable: Array<Room> = [];
 
         rooms.forEach(room => {
             if(room.occupancyPercentage(startDate, endDate) === 0){
@@ -93,18 +106,37 @@ class Room {
 
 
 
+interface BookingInterface {
+    name: string;
+    email: string;
+    checkIn: Date;
+    checkOut: Date;
+    discount: number;
+    room?: Room;
+}
+
 class Booking{
-    constructor(name, email, checkIn, checkOut, discount, room){
-        this.name = name; // string
-        this.email = email; // string
-        this.checkIn = checkIn; // date
-        this.checkOut = checkOut; // date
-        this.discount = discount; // as percentage
-        this.room = room; // room obj
+    name: string;
+    email: string;
+    checkIn: Date;
+    checkOut: Date;
+    discount: number;
+    room?: Room;
+
+    constructor(booking: BookingInterface){
+        this.name = booking.name;
+        this.email = booking.email;
+        this.checkIn = booking.checkIn;
+        this.checkOut = booking.checkOut;
+        this.discount = booking.discount;
+        this.room = booking.room;
     }
 
-    getFee(){
-        // returns the fee, including discounts on room and booking
+    getFee(): number {
+        // Check if room is defined before trying to access its properties
+        if (!this.room) {
+            throw new Error("No room assigned to booking");
+        }
 
         let totalDiscount = this.discount + this.room.discount;
         const discountedRate = this.room.rate * ((100 - totalDiscount) / 100);
@@ -114,8 +146,7 @@ class Booking{
         }
 
         return Math.floor(discountedRate);
-
     }
 }
 
-module.exports = { Room, Booking } ;
+module.exports = { Room, Booking };
