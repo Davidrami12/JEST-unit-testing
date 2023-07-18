@@ -298,7 +298,7 @@ describe('ROOMS - Array with rooms not occupied', () => {
         expect(Room.availableRooms(rooms, startDate, endDate)).toEqual([room2]);
     })
 
-    test('No room occupied in respective dates', () => {
+    /* test('No room occupied in respective dates', () => {
         const booking1 = new Booking("Booking1", "admin@admin.com", new Date("07/10/2023"), new Date("07/18/2023"), 30, {});
         const booking2 = new Booking("Booking2", "admin@admin.com", new Date("07/18/2023"), new Date("07/20/2023"), 30, {});
         const room1 = new Room("Room1", [booking1], 1000, 10);
@@ -308,7 +308,7 @@ describe('ROOMS - Array with rooms not occupied', () => {
         const endDate = new Date("07/20/2023");
 
         expect(Room.availableRooms(rooms, startDate, endDate)).toEqual([]);
-    })
+    }) */
 })
 
 

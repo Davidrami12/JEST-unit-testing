@@ -1,25 +1,17 @@
-interface RoomInterface {
-    name: string;
-    bookings: Array<Booking>;
-    rate: number;
-    discount: number;
-}
-
 class Room {
-
     name: string;
     bookings: Array<Booking>;
     rate: number;
     discount: number;
 
-    constructor(room: RoomInterface){
-        this.name = room.name; // string
-        this.bookings = room.bookings; // array bookings objs
-        this.rate = room.rate; // in cents
-        this.discount = room.discount; // as percentage
+    constructor(name: string, bookings: Array<Booking>, rate: number, discount: number){
+        this.name = name;
+        this.bookings = bookings;
+        this.rate = rate;
+        this.discount = discount;
     }
 
-    isOccupied(date: Date): boolean{
+    isOccupied(date: Date): boolean {
         // returns false if not occupied, returns true if occupied
 
         if (!(date instanceof Date)) {
@@ -57,7 +49,7 @@ class Room {
         return Math.floor((totalOccupied / daysDifference) * 100);
     } 
 
-    static totalOccupancyPercentage(rooms: Array<Room>, startDate: Date, endDate: Date): number {
+    static totalOccupancyPercentage(rooms: Room[], startDate: Date, endDate: Date): number {
         // returns the total occupancy percentage across all rooms in the array
 
         if (!Array.isArray(rooms)) {
@@ -79,8 +71,7 @@ class Room {
         return percentageTotal;
     }
 
-
-    static availableRooms(rooms: Array<Room>, startDate: Date, endDate: Date): Array<Room> | string{
+    static availableRooms(rooms: Room[], startDate: Date, endDate: Date): Room[] {
         // returns an array of all rooms in the array that are not occupied for the entire duration
 
         if (!Array.isArray(rooms)) {
@@ -91,7 +82,7 @@ class Room {
             throw new Error('Invalid parameter: startDate and endDate expected to be dates');
         }
         
-        const roomsAvailable: Array<Room> = [];
+        const roomsAvailable: Room[] = [];
 
         rooms.forEach(room => {
             if(room.occupancyPercentage(startDate, endDate) === 0){
@@ -101,44 +92,34 @@ class Room {
 
         return roomsAvailable;
     }
-
 }
 
-
-
-interface BookingInterface {
+class Booking {
     name: string;
     email: string;
     checkIn: Date;
     checkOut: Date;
     discount: number;
-    room?: Room;
-}
+    room: Room;
 
-class Booking{
-    name: string;
-    email: string;
-    checkIn: Date;
-    checkOut: Date;
-    discount: number;
-    room?: Room;
-
-    constructor(booking: BookingInterface){
-        this.name = booking.name;
-        this.email = booking.email;
-        this.checkIn = booking.checkIn;
-        this.checkOut = booking.checkOut;
-        this.discount = booking.discount;
-        this.room = booking.room;
+    constructor(name: string, email: string, checkIn: Date, checkOut: Date, discount: number, room: Room){
+        this.name = name;
+        this.email = email;
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.discount = discount;
+        this.room = room;
     }
 
     getFee(): number {
-        // Check if room is defined before trying to access its properties
-        if (!this.room) {
-            throw new Error("No room assigned to booking");
+        // returns the fee, including discounts on room and booking
+        
+        let totalDiscount = this.discount + this.room.discount;
+
+        if (totalDiscount < 0 || totalDiscount > 99) {
+            throw new Error("Invalid discount: total discount should be between 0 and 99");
         }
 
-        let totalDiscount = this.discount + this.room.discount;
         const discountedRate = this.room.rate * ((100 - totalDiscount) / 100);
 
         if (!Number.isInteger(discountedRate)) {
@@ -149,4 +130,4 @@ class Booking{
     }
 }
 
-module.exports = { Room, Booking };
+export { Room, Booking };
