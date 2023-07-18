@@ -107,6 +107,11 @@ class Booking{
         // returns the fee, including discounts on room and booking
 
         let totalDiscount = this.discount + this.room.discount;
+        
+        if (totalDiscount < 0 || totalDiscount > 99) {
+            throw new Error("Invalid discount: total discount should be between 0 and 99");
+        }
+
         const discountedRate = this.room.rate * ((100 - totalDiscount) / 100);
 
         if (!Number.isInteger(discountedRate)) {
